@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bluetooth test</title>
+</head>
+
+<body>
+    <h1>test test</h1>
+    <button>connect</button>
+    <h1></h1>
+    <div id="logs">Log output:</div>
+</body>
+
+</html>
+
+<!-- https://beaufortfrancois.github.io/sandbox/web-bluetooth/generator/ -->
+
+
+<script>
+    function Log(msg){
+        document.querySelector('#logs').innerHTML =
+                        document.querySelector('#logs').innerHTML + "<br>" + msg
+    }
+    class EspBTdevice {
+
+        constructor() {
+            this.device = null;
+            this.onDisconnected = this.onDisconnected.bind(this);
+        }
+
+        async request() {
+            let options = {
+                "filters": [{
+                    "name": "BLE Battery",
+                    "services": [0x180F]
+                }]
+            };
+            this.device = await navigator.bluetooth.requestDevice(options);
+            if (!this.device) {
+                throw "No device selected";
+            }
+            this.device.addEventListener('gattserverdisconnected', this.onDisconnected);
+        }
+
+        async connect() {
+            if (!this.device) {
+                return Promise.reject('Device is not connected.');
+            }
+            await this.device.gatt.connect();
+        }
+
+        disconnect() {
+            if (!this.device) {
+                return Promise.reject('Device is not connected.');
+            }
+            return this.device.gatt.disconnect();
+        }
+
+        onDisconnected() {
+            Log('Device is disconnected.');
+        }
+    }
+
+    var espBTdevice = new EspBTdevice();
+
+    document.querySelector('button').addEventListener('click', async event => {
+        try {
+            await espBTdevice.request();
+            await espBTdevice.connect();
+            /* Do something with espBTdevice... */
+        } catch (error) {
+            Log(error);
+        }
+    });
+</script>
