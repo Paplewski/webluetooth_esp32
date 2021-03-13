@@ -10,7 +10,8 @@
 
 <body>
     <h1> ESP32 BLE test web bluetooth API example </h1>
-    Enter the name of BLE device <input type="text">    <button>CONNECT</button>
+    <!-- Enter the name of BLE device <input type="text">    -->
+     <button>CONNECT</button>
     <h1></h1>
     <div id="logs">Log output:</div>
 </body>
@@ -97,7 +98,7 @@
 }
 
 document.querySelector('button').addEventListener('click', async event => {
-    Log("test")
+    // Log("test")
     navigator.bluetooth.requestDevice({
         acceptAllDevices: true,
         optionalServices: ['4fafc201-1fb5-459e-8fcc-c5c9c331914b']
