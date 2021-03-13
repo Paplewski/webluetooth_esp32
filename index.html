@@ -89,3 +89,47 @@
         }
     });
 </script> -->
+
+<script>
+    function Log(msg){
+    document.querySelector('#logs').innerHTML =
+                    document.querySelector('#logs').innerHTML + "<br>" + msg
+}
+
+document.querySelector('button').addEventListener('click', async event => {
+    Log("test")
+    navigator.bluetooth.requestDevice({
+        acceptAllDevices: true,
+        optionalServices: ['4fafc201-1fb5-459e-8fcc-c5c9c331914b']
+      })
+      .then(device => { 
+                
+        Log("connecting to " + device.name);
+
+        // Attempts to connect to remote GATT Server.
+        return device.gatt.connect();
+       })
+
+       
+       .then(server => {
+        // Getting Service…
+        return server.getPrimaryService("4fafc201-1fb5-459e-8fcc-c5c9c331914b");
+      })
+      .then(service => {
+        // Getting Characteristic…
+        return service.getCharacteristic("beb5483e-36e1-4688-b7f5-ea07361b26a8");
+      })
+      .then(characteristic => {
+        // Reading Battery Level…
+        return characteristic.readValue();
+      })
+      .then(value => {
+        Log(`Value is ${value.getUint8(0)}`);
+      })
+
+
+      .catch(error => { console.error(error); });
+});
+
+
+</script>
