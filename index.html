@@ -35,8 +35,7 @@
         async request() {
             let options = {
                 "filters": [{
-                    "name": "BLE Battery",
-                    "services": [0x180F]
+                    "name": "ESP32",
                 }]
             };
             this.device = await navigator.bluetooth.requestDevice(options);
